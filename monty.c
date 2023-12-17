@@ -27,6 +27,10 @@ int main(int argc, char *argv[])
 	{
 		opcode = strtok(line, " \t\n");
 		line_number++;
+		if (line[0] == '#' || line[0] == '\n')
+		{
+			continue;
+		}
 		if (sscanf(line, "%31s%d", opcode, &value) == 2)
 		{
 			printf("Opcode: %s, Value: %d\n", opcode, value);
@@ -75,6 +79,14 @@ int main(int argc, char *argv[])
 		else if (strcmp(opcode, "div") == 0)
 		{
 			div_op(&stack, line_number);
+		}
+		else if (strcmp(opcode, "mul") == 0)
+		{
+			mul(&stack, line_number);
+		}
+		else if (strcmp(opcode, "mod") == 0)
+		{
+			mod(&stack, line_number);
 		}
 
 		free(line);
