@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
 		}
 		else if (opcode && strcmp(opcode, "pstr") == 0)
 		{
-			pstr(&stack, line_number);
+			pstr(&stack);
 		}
 
 		free(line);

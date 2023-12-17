@@ -6,7 +6,7 @@
  * @line_number: Line number in the Monty byte code file.
  */
 
-void pstr(stack_t **stack, unsigned int line_number)
+void pstr(stack_t **stack)
 {
     stack_t *current = *stack;
 
@@ -17,5 +17,25 @@ void pstr(stack_t **stack, unsigned int line_number)
     }
 
     putchar('\n');
-    pop_until_null(stack, line_number);
+    pop_until_null(stack);
+}
+
+
+/**
+ * pop_until_null - Pops elements from the stack until a null value is encountered.
+ * @stack: Double pointer to the head of the stack.
+ * @line_number: Line number in the Monty byte code file.
+ */
+void pop_until_null(stack_t **stack)
+{
+	stack_t *current = *stack;
+	stack_t *next;
+
+	while (current != NULL && current->n != 0)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	*stack = current;
 }
