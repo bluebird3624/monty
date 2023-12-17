@@ -7,21 +7,19 @@
  */
 void push(stack_t **stack, int value)
 {
-    stack_t *new_node = malloc(sizeof(stack_t));
-    if (new_node == NULL)
-    {
-        fprintf(stderr, "Error: malloc failed\n");
-        exit(EXIT_FAILURE);
-    }
+	stack_t *new_node = malloc(sizeof(stack_t));
 
-    new_node->n = value;
-    new_node->prev = NULL;
-    new_node->next = *stack;
-
-    if (*stack != NULL)
-        (*stack)->prev = new_node;
-
-    *stack = new_node;
+	if (new_node == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	new_node->n = value;
+	new_node->prev = NULL;
+	new_node->next = *stack;
+	if (*stack != NULL)
+		(*stack)->prev = new_node;
+	*stack = new_node;
 }
 
 /**
@@ -31,15 +29,13 @@ void push(stack_t **stack, int value)
  */
 void pall(stack_t **stack, unsigned int line_number)
 {
-    stack_t *current = *stack;
-
-    (void)line_number;
-
-    while (current != NULL)
-    {
-        printf("%d\n", current->n);
-        current = current->next;
-    }
+	stack_t *current = *stack;
+	(void)line_number;
+	while (current != NULL)
+	{
+		printf("%d\n", current->n);
+		current = current->next;
+	}
 }
 
 /**
@@ -48,17 +44,16 @@ void pall(stack_t **stack, unsigned int line_number)
  */
 void free_stack(stack_t **stack)
 {
-    stack_t *current = *stack;
-    stack_t *next;
+	stack_t *current = *stack;
+	stack_t *next;
 
-    while (current != NULL)
-    {
-        next = current->next;
-        free(current);
-        current = next;
-    }
-
-    *stack = NULL;
+	while (current != NULL)
+	{
+		next = current->next;
+		free(current);
+		current = next;
+	}
+	*stack = NULL;
 }
 
 /**
@@ -68,18 +63,15 @@ void free_stack(stack_t **stack)
  */
 int is_integer(char *str)
 {
-    if (!str)
-        return 0;
-
-    if (*str == '-')
-        str++;
-
-    while (*str)
-    {
-        if (!isdigit((unsigned char)*str))
-            return 0;
-        str++;
-    }
-
-    return 1;
+	if (!str)
+		return (0);
+	if (*str == '-')
+		str++;
+	while (*str)
+	{
+		if (!isdigit((unsigned char)*str))
+			return (0);
+		str++;
+	}
+	return (1);
 }
