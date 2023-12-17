@@ -2,11 +2,16 @@
 
 int main(int argc, char *argv[])
 {
-    FILE *file = fopen(argv[1], "r");
-    stack_t *stack = NULL;
-    char opcode[128];
-    int value;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read;
     unsigned int line_number = 0;
+    char *opcode;
+    char *arg;
+    int value;
+
+    stack_t *stack = NULL;
+    FILE *file = fopen(argv[1], "r");
 
     if (argc != 2)
     {
@@ -14,42 +19,47 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    
-    if (file == NULL)
+    if (!file)
     {
         fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
         exit(EXIT_FAILURE);
     }
 
 
+    while ((read = getline(&line, &len, file)) != -1) {
 
-    while (fscanf(file, "%127s", opcode) != EOF)
-    {
+        opcode = strtok(line, " \t\n");
         line_number++;
-        if (strcmp(opcode, "push") == 0)
-        {
-            if (fscanf(file, "%d", &value) == 1)
-                push(&stack, value);
-            else
-            {
+
+
+        if (sscanf(line, "%31s%d", opcode, &value) == 2) {
+            printf("Opcode: %s, Value: %d\n", opcode, value);
+        }
+
+        arg = strtok(NULL, " \t\n");
+
+        if (opcode && strcmp(opcode, "push") == 0) {
+            if (!arg || !is_integer(arg)) {
                 fprintf(stderr, "L%d: usage: push integer\n", line_number);
+                free(line);
+                fclose(file);
+                free_stack(&stack);
                 exit(EXIT_FAILURE);
             }
-        }
-        else if (strcmp(opcode, "pall") == 0)
-        {
+            push(&stack, atoi(arg));
+        } else if (opcode && strcmp(opcode, "pall") == 0) {
             pall(&stack, line_number);
         }
-        
-        else
-        {
-            fprintf(stderr, "L%d: unknown instruction %s\n", line_number, opcode);
-            exit(EXIT_FAILURE);
-        }
+
+        free(line);
+        line = NULL;
+        len = 0;
     }
 
+
     fclose(file);
-	
+    free(line);
+    free_stack(&stack);
 
     return EXIT_SUCCESS;
 }
